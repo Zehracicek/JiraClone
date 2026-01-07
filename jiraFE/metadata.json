@@ -1,0 +1,5 @@
+{
+  "name": "JiraClone - Project Management System",
+  "description": "A comprehensive Jira-like project tracking application with Kanban boards, sprint management, and real-time reporting based on provided API endpoints.",
+  "requestFramePermissions": []
+}

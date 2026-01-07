@@ -1,0 +1,116 @@
+version: '3.8'
+
+services:
+  selenium-chrome:
+    image: selenium/standalone-chrome:latest
+    container_name: selenium-chrome
+    shm_size: 2gb
+    ports:
+      - "4444:4444"
+      - "7900:7900"
+    networks:
+      - projecttracker-network
+    environment:
+      - SE_NODE_MAX_SESSIONS=5
+      - SE_NODE_SESSION_TIMEOUT=300
+      - SE_VNC_NO_PASSWORD=1
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:4444/wd/hub/status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: projecttracker-postgres
+    environment:
+      POSTGRES_DB: projecttracker
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - projecttracker-network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U admin" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./JiraBE
+      dockerfile: Dockerfile
+    container_name: projecttracker-backend
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://projecttracker-postgres:5432/projecttracker
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin123
+      SPRING_PROFILES_ACTIVE: test
+    depends_on:
+      - postgres
+    networks:
+      - projecttracker-network
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./jiraFE
+      dockerfile: Dockerfile
+      args:
+        VITE_BACKEND_URL: http://projecttracker-backend:8080
+    container_name: projecttracker-frontend
+    ports:
+      - "5173:80"  # container içindeki 80 portunu host 5173'e map ediyor
+    depends_on:
+      - backend
+    networks:
+      - projecttracker-network
+    restart: unless-stopped
+
+  jenkins:
+    build:
+      context: ./jenkins
+      dockerfile: DockerFile
+      args:
+        DOCKER_GID: 102
+    container_name: projecttracker-jenkins
+    ports:
+      - "8090:8080"
+      - "50000:50000"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - projecttracker-network
+    restart: unless-stopped
+
+  test-runner:
+    build:
+      context: ./JiraBE
+      dockerfile: Dockerfile
+    container_name: test-runner
+    networks:
+      - projecttracker-network
+    depends_on:
+      - selenium-chrome
+      - frontend
+      - backend
+    environment:
+      BASE_URL: http://projecttracker-frontend
+      SELENIUM_REMOTE_URL: http://selenium-chrome:4444
+      BACKEND_URL: http://projecttracker-backend:8080
+      SPRING_PROFILES_ACTIVE: test
+    command: mvn clean verify -Dspring.profiles.active=test
+
+networks:
+  projecttracker-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  jenkins_home:

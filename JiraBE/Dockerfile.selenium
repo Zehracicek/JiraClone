@@ -1,0 +1,72 @@
+# ===== Temel image =====
+FROM ubuntu:22.04
+
+# ===== Ortam değişkenleri =====
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Istanbul
+
+# ===== Sistem bağımlılıkları =====
+RUN apt-get update && apt-get install -y \
+    wget \
+    unzip \
+    ca-certificates \
+    fonts-liberation \
+    libnss3 \
+    libatk-bridge2.0-0 \
+    libgtk-3-0 \
+    libxss1 \
+    libgbm1 \
+    libasound2 \
+    xdg-utils \
+    gnupg \
+    curl \
+    jq \
+    libglib2.0-0 \
+    libnss3-dev \
+    libgconf-2-4 \
+    libfontconfig1 \
+    libx11-6 \
+    libx11-xcb1 \
+    libxcb1 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxi6 \
+    libxtst6 \
+    libappindicator3-1 \
+    libcups2 \
+    libdbus-glib-1-2 \
+    libnspr4 \
+    libxrandr2 \
+    libpango-1.0-0 \
+    libcairo2 \
+    libatspi2.0-0 \
+    libdrm2 \
+    && rm -rf /var/lib/apt/lists/*
+
+# ===== Google Chrome kurulumu =====
+RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
+    && apt-get update \
+    && apt install -y ./google-chrome-stable_current_amd64.deb \
+    && rm google-chrome-stable_current_amd64.deb \
+    && rm -rf /var/lib/apt/lists/*
+
+# ===== ChromeDriver kurulumu =====
+RUN CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d '.' -f 1) \
+    && CHROMEDRIVER_VERSION=$(curl -s "https://googlechromelabs.github.io/chrome-for-testing/LATEST_RELEASE_${CHROME_VERSION}") \
+    && wget -O /tmp/chromedriver-linux64.zip "https://storage.googleapis.com/chrome-for-testing-public/${CHROMEDRIVER_VERSION}/linux64/chromedriver-linux64.zip" \
+    && unzip /tmp/chromedriver-linux64.zip -d /tmp/ \
+    && mv /tmp/chromedriver-linux64/chromedriver /usr/local/bin/chromedriver \
+    && chmod +x /usr/local/bin/chromedriver \
+    && rm -rf /tmp/chromedriver-linux64.zip /tmp/chromedriver-linux64
+
+# ===== ChromeDriver'ın çalıştığını doğrula =====
+RUN chromedriver --version
+
+# ===== Çalışma dizini =====
+WORKDIR /app
+
+# ===== Uygulama dosyalarını kopyala =====
+COPY . /app
+
+CMD ["/bin/bash"]

@@ -1,0 +1,39 @@
+
+### JiraClone API Endpoints Documentation
+
+#### AUTHENTICATION
+- POST /api/auth/login : Kullanıcı girişi yapar.
+- POST /api/auth/register : Yeni kullanıcı (veya admin) kaydı oluşturur.
+- GET  /api/auth/me : Mevcut oturum açmış kullanıcının bilgilerini döndürür.
+
+#### TASKS
+- GET    /api/tasks : Tüm görevleri listeler.
+- GET    /api/tasks/{id} : Belirli bir görevin detaylarını döndürür.
+- POST   /api/tasks : Yeni bir görev oluşturur.
+- PUT    /api/tasks/{id} : Mevcut bir görevi günceller (durum, öncelik, vb.).
+- DELETE /api/tasks/{id} : Bir görevi siler.
+- GET    /api/tasks/assignee/{username} : Belirli bir kullanıcıya atanmış görevleri döndürür.
+
+#### SPRINTS
+- GET    /api/sprints : Tüm sprintleri listeler.
+- GET    /api/sprints/{id} : Belirli bir sprintin detaylarını döndürür.
+- GET    /api/sprints/active/{userId} : Belirli bir kullanıcı için aktif olan sprinti döndürür.
+- POST   /api/sprints : Yeni bir sprint oluşturur.
+- PUT    /api/sprints/{id} : Bir sprinti günceller (isim, hedef, aktif/pasif durumu).
+- POST   /api/sprints/{sprintId}/tasks/{taskId} : Sprinte yeni bir görev ekler.
+- POST   /api/sprints/{id}/start : Bir sprinti başlatır.
+- POST   /api/sprints/{id}/complete : Bir sprinti tamamlar.
+- GET    /api/sprints/{id}/tasks : Belirli bir sprintteki tüm görevleri listeler.
+
+#### USERS
+- GET  /api/users : Tüm kayıtlı kullanıcıları listeler.
+- POST /api/users : Yeni bir kullanıcı oluşturur (Admin paneli için alternatif).
+- GET  /api/users/search?q={query} : Kullanıcıları arama terimine göre filtreler.
+
+#### REPORTS
+- GET /api/reports/sprint/{sprintId}/burndown : Sprint burndown verilerini döndürür.
+- GET /api/reports/sprint/{sprintId}/ideal-burndown : İdeal burndown çizgisini döndürür.
+- GET /api/reports/sprint/{sprintId}/detailed : Detaylı sprint performans raporu.
+- GET /api/reports/user/{username}/workload : Belirli bir kullanıcının iş yükü analizi.
+- GET /api/reports/users/workload-comparison : Tüm ekibin iş yükü karşılaştırma verisi.
+- GET /api/reports/task/{taskId}/time-details : Görev bazlı zaman detayları.
