@@ -1,8 +1,6 @@
 package com.projecttracker.repository;
 
 import com.projecttracker.model.Task;
-import com.projecttracker.model.TaskStatus;
-import com.projecttracker.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

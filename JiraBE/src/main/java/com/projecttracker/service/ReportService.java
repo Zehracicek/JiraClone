@@ -1,8 +1,5 @@
 package com.projecttracker.service;
 
-import com.projecttracker.dto.ReportDTO;
-import com.projecttracker.exception.ResourceNotFoundException;
-import com.projecttracker.model.Sprint;
 import com.projecttracker.model.Task;
 import com.projecttracker.model.TaskStatus;
 import com.projecttracker.model.User;
@@ -12,9 +9,6 @@ import com.projecttracker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 

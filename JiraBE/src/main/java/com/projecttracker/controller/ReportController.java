@@ -1,6 +1,5 @@
 package com.projecttracker.controller;
 
-import com.projecttracker.dto.ReportDTO;
 import com.projecttracker.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
