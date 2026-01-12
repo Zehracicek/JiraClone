@@ -66,7 +66,7 @@ class SprintServiceTest {
         sprint.setActive(true);
         sprint.setUsers(user);
 
-        task = new Task();
+        //task = new Task();
         task.setId(100L);
         task.setTitle("Test Task");
         task.setStatus(TaskStatus.IN_PROGRESS);
