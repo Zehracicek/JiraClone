@@ -40,7 +40,7 @@ class TaskServiceTest {
     void setUp() {
         user = new User();
         user.setId(1L);
-        user.setUsername("onur");
+        user.setUsername("zehra");
 
         task = new Task();
         task.setId(1L);

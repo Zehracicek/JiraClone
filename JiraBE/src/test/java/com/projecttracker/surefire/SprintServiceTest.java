@@ -50,13 +50,13 @@ class SprintServiceTest {
     void setUp() {
         user = new User();
         user.setId(1L);
-        user.setUsername("onur");
-        user.setFullName("Onur Aran");
+        user.setUsername("zehra");
+        user.setFullName("Zehra Cicek");
 
         userDTO = new UserDTO();
         userDTO.setId(1L);
-        userDTO.setUsername("onur");
-        userDTO.setFullName("Onur Aran");
+        userDTO.setUsername("zehra");
+        userDTO.setFullName("Zehra Cicek");
 
         sprint = new Sprint();
         sprint.setId(10L);

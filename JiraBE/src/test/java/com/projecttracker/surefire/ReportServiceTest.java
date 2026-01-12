@@ -29,15 +29,15 @@ class ReportServiceTest {
     @InjectMocks
     private ReportService reportService;
 
-    private User onur;
+    private User zehra;
     private User ayse;
 
     @BeforeEach
     void setUp() {
-        onur = new User();
-        onur.setId(1L);
-        onur.setUsername("onur");
-        onur.setFullName("Onur Aran");
+        zehra = new User();
+        zehra.setId(1L);
+        zehra.setUsername("zehra");
+        zehra.setFullName("Zehra Cicek");
 
         ayse = new User();
         ayse.setId(2L);
@@ -49,7 +49,7 @@ class ReportServiceTest {
     void testGetAllUsersWorkloadComparison() {
         // GIVEN
         when(userRepository.findAll())
-                .thenReturn(List.of(onur, ayse));
+                .thenReturn(List.of(zehra, ayse));
 
         Task t1 = new Task();
         t1.setStatus(TaskStatus.DONE);
@@ -57,7 +57,7 @@ class ReportServiceTest {
         Task t2 = new Task();
         t2.setStatus(TaskStatus.IN_PROGRESS);
 
-        when(taskRepository.findByAssigneeUsername("onur"))
+        when(taskRepository.findByAssigneeUsername("zehra"))
                 .thenReturn(List.of(t1, t2));
 
         when(taskRepository.findByAssigneeUsername("ayse"))
@@ -70,18 +70,18 @@ class ReportServiceTest {
         // THEN
         assertEquals(2, result.size());
 
-        Map<String, Object> onurStats = result.get(0);
-        assertEquals("onur", onurStats.get("username"));
-        assertEquals(2, onurStats.get("totalTasks"));
-        assertEquals(1L, onurStats.get("completedTasks"));
-        assertEquals(1L, onurStats.get("inProgressTasks"));
+        Map<String, Object> zehraStats = result.get(0);
+        assertEquals("zehra", zehraStats.get("username"));
+        assertEquals(2, zehraStats.get("totalTasks"));
+        assertEquals(1L, zehraStats.get("completedTasks"));
+        assertEquals(1L, zehraStats.get("inProgressTasks"));
 
         Map<String, Object> ayseStats = result.get(1);
         assertEquals("ayse", ayseStats.get("username"));
         assertEquals(0, ayseStats.get("totalTasks"));
 
         verify(userRepository, times(1)).findAll();
-        verify(taskRepository, times(1)).findByAssigneeUsername("onur");
+        verify(taskRepository, times(1)).findByAssigneeUsername("zehra");
         verify(taskRepository, times(1)).findByAssigneeUsername("ayse");
     }
 }
